@@ -1,5 +1,5 @@
 'use client';
-import {z} from 'zod';
+import {set, z} from 'zod';
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {
@@ -14,19 +14,18 @@ import {
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import { createClient } from '@/utils/supabase/client'
-import {revalidatePath} from "next/cache";
-import {redirect} from "next/navigation";
 import { useRouter } from 'next/navigation'
-import {Simulate} from "react-dom/test-utils";
-import reset = Simulate.reset;
+import { useEffect } from 'react';
+import {  useStudy } from '../studyProvider';
 
 const formSchema = z.object({
     project_id: z.string().min(2).max(20)
 });
 
-export default  function StudyPage() {
+export default function StudyPage() {
     const supabase = createClient()
     const router = useRouter();
+    const study = useStudy();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -35,19 +34,29 @@ export default  function StudyPage() {
         }
     })
 
+    useEffect(() =>{
+        console.log('render')
+        if(study !== null && study.study !== null){
+            form.setValue('project_id', study?.study?.project_id)
+        }
+    }, [study])
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const {data, error} = await supabase
+        if(study !== null && study?.study !== null){
+            const {data, error} = await supabase
             .from('Study')
-            .insert({project_id: values.project_id})
+            .update({project_id: values.project_id})
+            .eq("id", study.study.id)
 
         form.reset()
         router.refresh()
+        study.getStudy()
+        }
     }
 
 
     return (
         <Form {...form}>
-            {Math.random()}
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
@@ -56,11 +65,8 @@ export default  function StudyPage() {
                         <FormItem>
                             <FormLabel>Project ID</FormLabel>
                             <FormControl>
-                                <Input placeholder="shadcn" {...field} />
+                                <Input placeholder="project ID" {...field} />
                             </FormControl>
-                            <FormDescription>
-                                This is your public display name.
-                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
