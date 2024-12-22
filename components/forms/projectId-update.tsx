@@ -34,7 +34,6 @@ export default function ProjectIdUpdate() {
     })
 
     useEffect(() =>{
-        console.log('render')
         if(study !== null && study.study !== null){
             form.setValue('project_id', study?.study?.project_id)
         }

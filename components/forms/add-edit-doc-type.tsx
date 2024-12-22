@@ -14,11 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useStudy } from "@/app/studyProvider";
 import { Tables } from "@/database.types";
 import { Textarea } from "../ui/textarea";
-import { DialogClose, DialogFooter } from "../ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
