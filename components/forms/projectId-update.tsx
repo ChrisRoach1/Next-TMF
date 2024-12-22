@@ -1,11 +1,10 @@
 'use client';
-import {set, z} from 'zod';
+import {z} from 'zod';
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -16,13 +15,13 @@ import {Button} from "@/components/ui/button";
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react';
-import {  useStudy } from '../studyProvider';
+import { useStudy } from '@/app/studyProvider';
 
 const formSchema = z.object({
     project_id: z.string().min(2).max(20)
 });
 
-export default function StudyPage() {
+export default function ProjectIdUpdate() {
     const supabase = createClient()
     const router = useRouter();
     const study = useStudy();
@@ -76,4 +75,3 @@ export default function StudyPage() {
         </Form>
     )
 }
-

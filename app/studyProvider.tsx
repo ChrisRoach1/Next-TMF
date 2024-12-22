@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Tables } from "@/database.types";
 import { createClient } from "@/utils/supabase/client";
+import { Toaster } from "@/components/ui/toaster"
 
 type contextType = {
   study: Tables<'Study'> | null,
@@ -36,6 +37,7 @@ export function Providers({
   return (
     <studyContext.Provider value={{ study, getStudy }}>
       {children}
+      <Toaster />
     </studyContext.Provider>
   );
 }
