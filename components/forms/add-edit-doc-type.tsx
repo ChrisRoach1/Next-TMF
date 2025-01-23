@@ -24,7 +24,7 @@ const formSchema = z.object({
 });
 
 export default function AddEditDocumentType(props: {
-  documentType: Tables<"DocumentType">;
+  documentType: Tables<"DocumentType"> | null;
   setOpenState: (value: boolean) => void;
 }) {
   const supabase = createClient();
@@ -35,37 +35,41 @@ export default function AddEditDocumentType(props: {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: props.documentType.name ? props.documentType.name : "",
-      description: props.documentType.description
+      name: props.documentType?.name ? props.documentType.name : "",
+      description: props.documentType?.description
         ? props.documentType.description
         : "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (props.documentType.id) {
+    if (props.documentType?.id) {
       const { data, error } = await supabase
         .from("DocumentType")
         .update({ name: values.name, description: values.description })
         .eq("id", props.documentType.id);
+        
+        toast({
+          title: "Success",
+          description: "Document Type updated!"
+        })
 
-      form.reset();
-      router.refresh();
     } else {
       const { data, error } = await supabase
         .from("DocumentType")
         .insert({ name: values.name, description: values.description });
 
-      form.reset();
-      router.refresh();
+        toast({
+          title: "Success",
+          description: "Document Type created!"
+        })
     }
 
+    form.reset();
+    router.refresh();
     props.setOpenState(false);
 
-    toast({
-      title: "Success",
-      description: "Document Type updated!"
-    })
+
   }
 
   return (

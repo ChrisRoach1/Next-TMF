@@ -17,10 +17,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { PlusIcon } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import AddEditDocumentType from "@/components/forms/add-edit-doc-type"
-import { useState } from "react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -43,15 +39,9 @@ export function DataTable<TData, TValue>({
     },
   })
 
-  const [open, setOpen] = useState(false);
   return (
     <div className="space-y-4 w-full overflow-x-auto">
-      <div className="flex justify-end mb-4">
-        <Button onClick={() => setOpen(true)}>
-          <PlusIcon className="h-4 w-4 mr-2" />
-          Add Document Type
-        </Button>
-      </div>
+
       <div className="rounded-md border overflow-x-auto">
         <Table>
           <TableHeader>
@@ -91,7 +81,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No document types found.
+                  No documents found.
                 </TableCell>
               </TableRow>
             )}
@@ -102,7 +92,7 @@ export function DataTable<TData, TValue>({
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
         <p className="text-sm text-muted-foreground order-2 sm:order-1">
           Showing {table.getRowModel().rows?.length ?? 0} of {" "}
-          {data.length} document types
+          {data.length} documents
         </p>
         <div className="flex items-center space-x-2 order-1 sm:order-2">
           <Button
@@ -123,16 +113,6 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
       </div>
-
-      <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Edit</DialogTitle>
-                </DialogHeader>
-                <AddEditDocumentType documentType={null} setOpenState={setOpen} />
-            </DialogContent>
-        </Dialog>
-
     </div>
   )
 }

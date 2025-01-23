@@ -66,6 +66,59 @@ export type Database = {
         }
         Relationships: []
       }
+      TMFDocument: {
+        Row: {
+          created_at: string
+          created_by: string
+          document_date: string
+          document_notes: string | null
+          document_typeId: number
+          file_name: string
+          file_path: string | null
+          id: number
+          tags: string | null
+          updated_at: string | null
+          updated_by: string | null
+          version: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          document_date: string
+          document_notes?: string | null
+          document_typeId: number
+          file_name: string
+          file_path?: string | null
+          id?: number
+          tags?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          version: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          document_date?: string
+          document_notes?: string | null
+          document_typeId?: number
+          file_name?: string
+          file_path?: string | null
+          id?: number
+          tags?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "TMFDocument_document_typeId_fkey"
+            columns: ["document_typeId"]
+            isOneToOne: false
+            referencedRelation: "DocumentType"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

@@ -21,11 +21,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Tables } from "@/database.types";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Table } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
+import { documentsWithDoctypes } from "./queries";
 
-export const columns: ColumnDef<Tables<"DocumentType">>[] = [
+type WithRelations<T, R> = T & R
+
+export const columns: ColumnDef<documentsWithDoctypes[0]>[] = [
   {
     accessorKey: "id",
     header: () => <div className="">ID</div>,
@@ -34,21 +37,68 @@ export const columns: ColumnDef<Tables<"DocumentType">>[] = [
     },
   },
   {
-    accessorKey: "name",
+    accessorKey: "file_name",
     header: () => <div className="">Name</div>,
     cell: ({ row }) => {
       return (
-        <div className="text-right font-medium">{row.getValue("name")}</div>
+        <div className="text-left font-medium">{row.getValue("file_name")}</div>
       );
     },
   },
   {
-    accessorKey: "description",
-    header: () => <div className="">Description</div>,
+    accessorKey: "document_type",
+    header: () => <div className="">Document Type</div>,
+    cell: ({ row }) => {
+      console.log(row)
+      console.log(row.original)
+      let docType = row.original.document_type
+      return (
+        <div className="text-left font-medium">
+          {docType.name}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "version",
+    header: () => <div className="">Version</div>,
     cell: ({ row }) => {
       return (
-        <div className="text-right font-medium">
-          {row.getValue("description")}
+        <div className="text-left font-medium">
+          {row.getValue("version")}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "document_date",
+    header: () => <div className="">Document Date</div>,
+    cell: ({ row }) => {
+      return (
+        <div className="text-left font-medium">
+          {row.getValue("document_date")}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "tags",
+    header: () => <div className="">Tags</div>,
+    cell: ({ row }) => {
+      return (
+        <div className="text-left font-medium">
+          {row.getValue("tags")}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "document_notes",
+    header: () => <div className="">Notes</div>,
+    cell: ({ row }) => {
+      return (
+        <div className="text-left font-medium">
+          {row.getValue("document_notes")}
         </div>
       );
     },
@@ -56,9 +106,7 @@ export const columns: ColumnDef<Tables<"DocumentType">>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const documentType = row.original;
       const [open, setOpen] = useState(false);
-      const [modalType, setModalType] = useState('edit')
 
       return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -74,33 +122,19 @@ export const columns: ColumnDef<Tables<"DocumentType">>[] = [
               <DropdownMenuSeparator />
 
               <DialogTrigger asChild>
-                <DropdownMenuItem onClick={() => setModalType('edit')}>Edit</DropdownMenuItem>
+                <DropdownMenuItem >Edit</DropdownMenuItem>
               </DialogTrigger>
               <DialogTrigger asChild>
-              <DropdownMenuItem onClick={() => setModalType('delete')}>Delete</DropdownMenuItem>
+              <DropdownMenuItem >Delete</DropdownMenuItem>
               </DialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {modalType === 'edit' ? (
-            <DialogContent>
+          <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Edit</DialogTitle>
                 </DialogHeader>
-                <AddEditDocumentType documentType={documentType} setOpenState={setOpen} />
             </DialogContent>
-          ) : (
-            <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Delete?</DialogTitle>
-                  <DialogDescription>
-                    This action cannot be undone. Are you sure you want to
-                    permanently delete this file from our servers?
-                  </DialogDescription>
-                </DialogHeader>
-                <DeleteButton value={documentType.id} tablename="DocumentType" fieldname="id" setopenstate={setOpen}>Delete</DeleteButton>
-            </DialogContent>
-          )}
 
         </Dialog>
       );

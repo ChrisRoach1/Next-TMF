@@ -55,22 +55,22 @@ export default function ProjectIdUpdate() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="project_id"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Project ID</FormLabel>
-                            <FormControl>
-                                <Input placeholder="project ID" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Button type="submit">Submit</Button>
-            </form>
-        </Form>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full max-w-lg space-y-4">
+            <FormField
+                control={form.control}
+                name="project_id"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Project ID</FormLabel>
+                        <FormControl>
+                            <Input placeholder="Enter project ID" {...field} className="w-full" />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <Button type="submit" className="w-full sm:w-auto">Update Project ID</Button>
+        </form>
+    </Form>
     )
 }
